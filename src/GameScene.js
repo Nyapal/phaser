@@ -15,6 +15,7 @@ class GameScene extends Scene {
         this.createPlatforms()
         this.createPlayer()
         this.createCursor()
+        this.createStars()
     }
     createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
@@ -52,8 +53,22 @@ class GameScene extends Scene {
     createCursor() {
         this.cursors = this.input.keyboard.createCursorKeys();
     }
+    createStars() {
+        this.stars = this.physics.add.group({
+            key: 'star',
+            repeat: 11,
+            setXY: { x: 12, y: 0, stepX: 70 }
+        });
+        this.stars.children.iterate( (child) => {
+            child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+        });
+        this.physics.add.collider(this.stars, this.platforms);
+        this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
+    } 
+    collectStar(player, star) {
+        star.disableBody(true, true);
+    }
     update() {
-
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-160);
 
