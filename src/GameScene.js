@@ -1,6 +1,14 @@
 import { Scene } from 'phaser';
 
 class GameScene extends Scene {
+    constructor() {
+        super() 
+
+        this.score = 0
+    }
+
+    // ************************************************
+    // Preload
     preload() {
         this.load.image('sky', 'assets/sky.png')
         this.load.image('ground', 'assets/platform.png')
@@ -16,6 +24,7 @@ class GameScene extends Scene {
         this.createPlayer()
         this.createCursor()
         this.createStars()
+        this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
     }
     createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
@@ -67,6 +76,8 @@ class GameScene extends Scene {
     } 
     collectStar(player, star) {
         star.disableBody(true, true);
+        this.score += 10;
+        this.scoreText.setText('Score: ' + this.score);
     }
     update() {
         if (this.cursors.left.isDown) {
