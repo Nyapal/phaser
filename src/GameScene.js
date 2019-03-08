@@ -2,7 +2,7 @@ import { Scene } from 'phaser';
 
 class GameScene extends Scene {
     constructor() {
-        super() 
+        super('game') 
 
         this.score = 0
         this.gameOver = false
@@ -27,6 +27,9 @@ class GameScene extends Scene {
         this.createStars()
         this.createBombs()
         this.scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+        this.gameOverText = this.add.text(400, 300, ' Game Over ;( ', { fontSize: '64px', fill: '#e00'});
+        this.gameOverText.setOrigin(0.5)
+        this.gameOverText.visible = false
     }
     createPlatforms() {
         this.platforms = this.physics.add.staticGroup();
@@ -37,6 +40,7 @@ class GameScene extends Scene {
     }
     createPlayer() {
         this.player = this.physics.add.sprite(100, 450, 'dude');
+        this.player.setCircle(13, 2, 12)
         this.player.setBounce(0.2);
         this.player.setCollideWorldBounds(true);
         this.physics.add.collider(this.player, this.platforms);
@@ -73,6 +77,7 @@ class GameScene extends Scene {
         this.stars.children.iterate( (child) => {
             child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
         });
+        this.stars.setCircle(13, 2, 12)
         this.physics.add.collider(this.stars, this.platforms);
         this.physics.add.overlap(this.player, this.stars, this.collectStar, null, this);
     } 
@@ -104,6 +109,7 @@ class GameScene extends Scene {
         player.setTint(0xff0000);
         player.anims.play('turn');
         this.gameOver = true;
+        this.gameOverText.visible = true;
     }
     update() {
         if (this.cursors.left.isDown) {
